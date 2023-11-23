@@ -17,19 +17,21 @@ func helper(preorder []int, postorder []int, preL int, preR int, postL int, post
 	if preL > preR || postL > postR {
 		return nil
 	}
-	root := &TreeNode{preorder[preL], nil, nil}
+	root := &TreeNode{Val: preorder[preL]}
 	if preL == preR {
 		return root
 	}
+
 	idx := -1
-	for idx = postL; idx < postR; idx++ {
-		if postorder[preL+1] == postorder[idx] {
+	for i := postL; i < postR; i++ {
+		if preorder[preL+1] == postorder[i] {
+			idx = i
 			break
 		}
 	}
 
-	root.Left = helper(preorder, postorder, preL+1, postL+1+idx-postL, postL, idx)
-	root.Right = helper(preorder, postorder, postR-1-idx-1, preR, idx+1, postR-1)
+	root.Left = helper(preorder, postorder, preL+1, preL+1+idx-postL, postL, idx)
+	root.Right = helper(preorder, postorder, preL+1+(idx-postL)+1, preR, idx+1, postR-1)
 
 	return root
 }
