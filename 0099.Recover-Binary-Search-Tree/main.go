@@ -1,6 +1,8 @@
 package main
 
-import "math"
+import (
+	"math"
+)
 
 // Definition for a binary nodeList node.
 type TreeNode struct {
@@ -11,11 +13,11 @@ type TreeNode struct {
 
 func main() {
 	// root = [3,1,4,null,null,2]
-	root := &TreeNode{Val: 3}
-	root.Left = &TreeNode{Val: 1}
-	root.Right = &TreeNode{Val: 4}
-	root.Right.Left = &TreeNode{Val: 2}
-	recoverTree(root)
+	// root := &TreeNode{Val: 3}
+	// root.Left = &TreeNode{Val: 1}
+	// root.Right = &TreeNode{Val: 4}
+	// root.Right.Left = &TreeNode{Val: 2}
+	// recoverTree(root)
 
 	println("=======================================>")
 
@@ -34,7 +36,62 @@ func main() {
 	//recoverTree(root)
 
 	println("=======================================>")
+	// root = [3,1,4,null,null,2]
+	root := &TreeNode{Val: 3}
+	root.Left = &TreeNode{Val: 1}
+	root.Right = &TreeNode{Val: 4}
+	root.Right.Left = &TreeNode{Val: 2}
+	recoverTreeRecursion(root)
 
+	println("=======================================>")
+
+	// root = [1,3,null,null,2]
+	// root := &TreeNode{Val: 1}
+	// root.Left = &TreeNode{Val: 3}
+	// root.Left.Right = &TreeNode{Val: 2}
+	// recoverTreeRecursion(root)
+
+	println("=======================================>")
+
+	// root = [2,3,1]
+	// root := &TreeNode{Val: 2}
+	// root.Left = &TreeNode{Val: 3}
+	// root.Right = &TreeNode{Val: 1}
+	// recoverTreeRecursion(root)
+
+	println("=======================================>")
+
+}
+
+// 如果不在外面定义的话，我们就需要将这三个值封装到一时struct里
+// 因为go语言的参数传递是值传递，即使的引用，也是引用的值
+var first, second, pre *TreeNode
+
+// 使用中序遍历
+func recoverTreeRecursion(root *TreeNode) {
+	helper(root)
+	if first != nil && second != nil {
+		first.Val, second.Val = second.Val, first.Val
+	}
+}
+
+func helper(root *TreeNode) {
+	if root == nil {
+		return
+	}
+	helper(root.Left)
+	if pre != nil && root.Val < pre.Val {
+		if first == nil {
+			// 因为中序遍历是 左-中-右， first存放的应该是大的，second该存小的
+			// 第一次要将两个都赋值，解决两个节点是相邻节点的情况时
+			first = pre
+			second = root
+		} else {
+			second = root
+		}
+	}
+	pre = root
+	helper(root.Right)
 }
 
 // 使用Morris遍历算法 需要额外的空间复杂度
