@@ -243,6 +243,7 @@ def gen_files(url: str):
         print("create new folder ", newfolder)
     else:
         print("already exist folder:", newfolder)
+        return
 
     # 生成 markdown 文件
     filepath = os.path.join(base_dir, newfolder, title + ".md")
